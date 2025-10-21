@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Evolução - JFC Capital</title>
+    <style>
+        :root {
+            --bg-dark-primary: #0d1117;
+            --bg-dark-secondary: #161b22;
+            --bg-card: #21262d;
+            --border-color: #30363d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-blue: #58a6ff;
+            --positive-green: #3fb950;
+            --negative-red: #f85149;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* --- Reset e Configurações Globais --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-dark-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* --- Estrutura Principal --- */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--bg-dark-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--accent-blue);
+        }
+
+        header h1 {
+            color: var(--text-primary);
+            font-size: 2.25rem;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            color: var(--accent-blue);
+            margin-top: 30px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* --- Classes Utilitárias --- */
+        .text-green { color: var(--positive-green); }
+        .text-red { color: var(--negative-red); }
+        .text-gray { color: var(--text-secondary); }
+        .text-small { font-size: 0.9rem; }
+        .font-bold { font-weight: 700; }
+        .font-large { font-size: 2.25rem; }
+
+        /* --- Seção de Resumo --- */
+        .summary-box {
+            background-color: var(--bg-card);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 5px solid var(--accent-blue);
+            line-height: 1.7;
+            font-size: 1.05rem;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .summary-box strong {
+            color: var(--text-primary);
+        }
+
+        /* --- Layout de Cards --- */
+        .card-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        /* --- [CORREÇÃO] CSS Específico para os grids --- */
+        .card-grid.highlights {
+            grid-template-columns: 1fr; /* 1 coluna por padrão (mobile) */
+        }
+
+        .card-grid.metrics {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+        /* --- Fim da Correção --- */
+
+
+        /* --- Card de Destaque --- */
+        .highlight-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .highlight-card .title {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .highlight-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .highlight-card .delta {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* --- Card de Métrica --- */
+        .metric-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .metric-card h3 {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .metric-card .current-value {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .metric-card .previous-value {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .metric-card .evolution {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* --- Tabela Responsiva --- */
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-card);
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            white-space: nowrap; /* Impede que o texto quebre */
+        }
+
+        th, td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--bg-dark-secondary);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: var(--bg-dark-secondary);
+        }
+
+        tfoot tr {
+            background-color: var(--bg-dark-secondary);
+        }
+
+        tfoot td {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- Media Query para Responsividade --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+
+            .container {
+                margin: 0;
+                padding: 15px;
+                border: none;
+                border-radius: 0;
+            }
+
+            header h1 {
+                font-size: 1.75rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .highlight-card .value {
+                font-size: 2rem;
+            }
+
+            .metric-card .current-value {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* --- [CORREÇÃO] Media Query para forçar 2 colunas em telas maiores --- */
+        @media (min-width: 768px) {
+             .card-grid.highlights {
+                /* Força 2 colunas em tablets e desktops, criando o layout 2x2 */
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Relatório de Evolução de Performance</h1>
+            <p>Análise Comparativa: "Dashboard Unificado <strong>JFC</strong>" (Anterior) vs. "Performance de Renda Mensal" (Atual)</p>
+        </header>
+
+        <main>
+            <h2>Principais Indicadores 📊</h2>
+            <div class="card-grid highlights">
+                <div class="highlight-card">
+                    <span class="title">📉 Total Investido (USD)</span>
+                    <div class="value text-red">$ 34.418,00</div>
+                    <div class="delta text-red">
+                        -$ 9.178,00 (-21,05%)
+                    </div>
+                </div>
+                <div class="highlight-card">
+                    <span class="title">📉 Total Investido (BRL)</span>
+                    <div class="value text-red">R$ 185.512,48</div>
+                    <div class="delta text-red">
+                        -R$ 49.034,00 (-20,90%)
+                    </div>
+                </div>
+                
+                <div class="highlight-card">
+                    <span class="title">📈 Saldo Total RoboForex (USD)</span>
+                    <div class="value text-green">$ 3.308,00</div>
+                    <div class="delta text-green">
+                        + $ 86,00 (+2,67%)
+                    </div>
+                </div>
+                <div class="highlight-card">
+                    <span class="title">📈 Saldo Total RoboForex (BRL)</span>
+                    <div class="value text-green">R$ 17.830,00</div>
+                    <div class="delta text-green">
+                        +R$ 495,52 (+2,86%)
+                    </div>
+                </div>
+            </div>
+
+            <h2>Resumo Analítico 📝</h2>
+            <div class="summary-box">
+                <p>
+                    A transição para o novo dashboard "Performance de Renda Mensal" revela uma mudança estratégica significativa. Observa-se uma <strong>redução de 21,05% no Valor Total Investido</strong> nos robôs, totalizando uma saída de <strong>$ 9.178,00 USD</strong> (R$ 49.034,00 BRL).
+                </p>
+                <p style="margin-top: 10px;">
+                    Em contrapartida, o <strong>Saldo em Caixa (RoboForex)</strong> apresentou um <strong>aumento de 2,67%</strong>, indicando um possível movimento de realização de lucros ou desinvestimento dos robôs para o saldo da corretora. O número de clientes ativos permaneceu estável em 50, e a cotação do dólar teve uma leve alta de 0,37%.
+                </p>
+            </div>
+
+            <h2>Métricas Principais 📋</h2>
+            <div class="card-grid metrics">
+                <div class="metric-card">
+                    <h3>💵 Cotação Dólar</h3>
+                    <div class="current-value">$ 5,39</div>
+                    <div class="previous-value">Anterior: $ 5,37</div>
+                    <div class="evolution text-green">
+                        + $ 0,02 (+0,37%)
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <h3>💰 Saldo RoboForex (USD)</h3>
+                    <div class="current-value">$ 3.308,00</div>
+                    <div class="previous-value">Anterior: $ 3.222,00</div>
+                    <div class="evolution text-green">
+                        + $ 86,00 (+2,67%)
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <h3>🇧🇷 Saldo RoboForex (BRL)</h3>
+                    <div class="current-value">R$ 17.830,00</div>
+                    <div class="previous-value">Anterior: R$ 17.334,48</div>
+                    <div class="evolution text-green">
+                        + R$ 495,52 (+2,86%)
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <h3>👤 Clientes Ativos</h3>
+                    <div class="current-value">50</div>
+                    <div class="previous-value">Anterior: 50</div>
+                    <div class="evolution text-gray">
+                        0 (Estável)
+                    </div>
+                </div>
+            </div>
+
+            <h2>Análise de Investimento por Robô (USD) 🤖</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Copy (Robô)</th>
+                            <th>Valor Anterior (USD)</th>
+                            <th>Valor Atual (USD)</th>
+                            <th>Evolução (USD)</th>
+                            <th>Evolução (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Robo Canada</td>
+                            <td>$ 26.890,00</td>
+                            <td>$ 18.265,00</td>
+                            <td class="text-red">-$ 8.625,00</td>
+                            <td class="text-red">-32,07%</td>
+                        </tr>
+                        <tr>
+                            <td>Robo Canada Slow</td>
+                            <td>$ 7.573,00</td>
+                            <td>$ 7.298,00</td>
+                            <td class="text-red">-$ 275,00</td>
+                            <td class="text-red">-3,63%</td>
+                        </tr>
+                        <tr>
+                            <td>Robo Canada 10%</td>
+                            <td>$ 9.133,00</td>
+                            <td>$ 8.855,00</td>
+                            <td class="text-red">-$ 278,00</td>
+                            <td class="text-red">-3,04%</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>TOTAL</td>
+                            <td>$ 43.596,00</td>
+                            <td>$ 34.418,00</td>
+                            <td class="text-red">-$ 9.178,00</td>
+                            <td class="text-red">-21,05%</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <h2>Análise de Investimento por Robô (BRL) 🇧🇷</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Copy (Robô)</th>
+                            <th>Valor Anterior (BRL)</th>
+                            <th>Valor Atual (BRL)</th>
+                            <th>Evolução (BRL)</th>
+                            <th>Evolução (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Robo Canada</td>
+                            <td>R$ 144.688,92</td>
+                            <td>R$ 98.448,00</td>
+                            <td class="text-red">-R$ 46.240,92</td>
+                            <td class="text-red">-31,96%</td>
+                        </tr>
+                        <tr>
+                            <td>Robo Canada Slow</td>
+                            <td>R$ 40.742,48</td>
+                            <td>R$ 39.336,48</td>
+                            <td class="text-red">-R$ 1.406,00</td>
+                            <td class="text-red">-3,45%</td>
+                        </tr>
+                        <tr>
+                            <td>Robo Canada 10%</td>
+                            <td>R$ 49.135,00</td>
+                            <td>R$ 47.728,00</td>
+                            <td class="text-red">-R$ 1.407,00</td>
+                            <td class="text-red">-2,86%</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>TOTAL</td>
+                            <td>R$ 234.546,48</td>
+                            <td>R$ 185.512,48</td>
+                            <td class="text-red">-R$ 49.034,00</td>
+                            <td class="text-red">-20,90%</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+        </main>
+
+        <footer>
+            <p>Relatório gerado em 21 de outubro de 2025.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
